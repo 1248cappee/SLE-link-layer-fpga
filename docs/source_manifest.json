@@ -1,0 +1,26 @@
+{
+  "01_SLE_SCH_寄存器表_v1.0.xlsx": {
+    "sha256": "4b55042bb3380a066a4766637ca63796e4aba054d04b028580f6c68631927785",
+    "bytes": 11004
+  },
+  "02_SLE_SCH_共享内存表_v1.0.xlsx": {
+    "sha256": "3dab0d725900703231fab1980211a1999cfb44698b7b6fb6b788bdd62f751bf1",
+    "bytes": 11198
+  },
+  "03_SLE_SCH_状态时序表_v1.0.xlsx": {
+    "sha256": "4d368797be2945203266e28f3ef7378a84c11d63fb777528919a2e52f1ad883d",
+    "bytes": 8862
+  },
+  "53_星闪无线通信系统 接入层 同步低功耗空口SLE技术要求和测试方法.pdf": {
+    "sha256": "5df8f9ec6fa70978f538f26a0092c71c07dbe59b8cd73d192ebea9492e61adc1",
+    "bytes": 14568525
+  },
+  "BLE.zip": {
+    "sha256": "50b3a657de27108cd8d5e4692b9df9abfcecabebfc3082978683963e898648f7",
+    "bytes": 1144943
+  },
+  "RW-BLE-CORE-FS.pdf": {
+    "sha256": "7d291b289b3833d19ca6d6885a5457a84ec4b8a9e0cf496f28746f4224c3d59b",
+    "bytes": 36187234
+  }
+}

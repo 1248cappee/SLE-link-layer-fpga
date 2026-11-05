@@ -1,0 +1,11 @@
+build/
+__pycache__/
+*.pyc
+# Local material from the original references and private PHY repository.
+external/p101_phy_rf/
+docs/resource_contract.json
+docs/requirements_coverage.json
+docs/module_mapping.json
+docs/phy_source_lock.json
+docs/PHY_ISSUES.md
+docs/acceptance.json

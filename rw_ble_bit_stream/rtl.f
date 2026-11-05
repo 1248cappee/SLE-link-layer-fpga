@@ -1,0 +1,9 @@
+rw_ble_bit_stream/verilog/rtl/rw_ble_bit_stream.v
+rw_ble_bit_stream/verilog/rtl/rw_ble_lr_fec_enc.v
+rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdemap.v
+rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdetect.v
+rw_ble_bit_stream/verilog/rtl/rw_ble_whitening.v
+rw_ble_bit_stream/verilog/rtl/rw_ble_crc.v
+rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdecoder.v
+rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pmap.v
+rw_ble_bit_stream/verilog/rtl/rw_ble_lr_psynchro.v

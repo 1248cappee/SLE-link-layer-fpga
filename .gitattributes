@@ -1,0 +1,2 @@
+# Preserve source bytes: validation manifests hash the exact input files.
+* -text

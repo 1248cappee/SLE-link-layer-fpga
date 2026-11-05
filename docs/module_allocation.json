@@ -1,0 +1,260 @@
+[
+  {
+    "source": "BLE/rw_ble_ral_search_engine/verilog/rtl/rw_ble_ral_search_engine.v",
+    "target": "rw_ble_ral_search_engine/verilog/rtl/rw_ble_ral_search_engine.v",
+    "module": "rw_ble_ral_search_engine",
+    "source_sha256": "ada19628d474032f7810463e6b866a0722b9ca89c81851a38619b4bbb3209bda"
+  },
+  {
+    "source": "BLE/rw_ble_list_search_engine/verilog/rtl/rw_ble_list_search_engine.v",
+    "target": "rw_ble_list_search_engine/verilog/rtl/rw_ble_list_search_engine.v",
+    "module": "rw_ble_list_search_engine",
+    "source_sha256": "1b8d2f483d98b74fe33f2d716f6603fa90b37091ff3e5ea4cdda798ac408999d"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_scanch.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_scanch.v",
+    "module": "rw_ble_event_cntl_scanch",
+    "source_sha256": "9ed13673ad38aecf723909d0b24fa6299dc5f6df9e851228021987fc1ac440cf"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_timers.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_timers.v",
+    "module": "rw_ble_event_cntl_timers",
+    "source_sha256": "80248fe39a68b98f601158514f15fac15f9a2ace1e6c88f00e8360eebe7710e3"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_pti.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_pti.v",
+    "module": "rw_ble_event_cntl_pti",
+    "source_sha256": "3b1e1037c963dd4fa5e4d6dffc0a41d9d547fd889c757b1697d7c7eb6623b50f"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_test.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_test.v",
+    "module": "rw_ble_event_cntl_test",
+    "source_sha256": "6f4ddd64a1fb5353ba063675388618642215fd6b82b5f2c47abd434561b3ee86"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_main.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_main.v",
+    "module": "rw_ble_event_cntl_main",
+    "source_sha256": "b1fba30afc0853c3cfa0267bd45fd211deea7f22309d95d806ecdeaa13e023bc"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_advert.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_advert.v",
+    "module": "rw_ble_event_cntl_advert",
+    "source_sha256": "f16ea88bda71dd875104ac0c48819c6a9d31ebaae6d70005e450ed9c2fd06477"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_master.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_master.v",
+    "module": "rw_ble_event_cntl_master",
+    "source_sha256": "cef30b349cb0f131c9b74d702d88d1e383bf38467fc3434fb06d1bb4913f112b"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_iso0master.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_iso0master.v",
+    "module": "rw_ble_event_cntl_iso0master",
+    "source_sha256": "70ea48fd6402d655b491d743a446ecc301cdf32b9ea64b1c39d1a50175230ad7"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_em_manager.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_em_manager.v",
+    "module": "rw_ble_event_cntl_em_manager",
+    "source_sha256": "b7882139c2b110f3be5c3096554765a0838521b4e46e6203f37776397adf3861"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl.v",
+    "module": "rw_ble_event_cntl",
+    "source_sha256": "fdd7d73f700754fb97943607209afb6cf99e4e3efef2faffa152b7b00e980c2f"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_cismaster.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_cismaster.v",
+    "module": "rw_ble_event_cntl_cismaster",
+    "source_sha256": "f13c880ac28bbc1f99608eb1834141d9ebbe7b56bee28a94bddf37f10822387b"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_iso0slave.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_iso0slave.v",
+    "module": "rw_ble_event_cntl_iso0slave",
+    "source_sha256": "c137e12d9a041d29d86be31977e67927571cd904f2a17a81c8287c45f9615ded"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_scaninit.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_scaninit.v",
+    "module": "rw_ble_event_cntl_scaninit",
+    "source_sha256": "eba172fc2f8821d8d9a5a49fafbcd521fdec864db5a3ef09cd70230fca9b71be"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_bismaster.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_bismaster.v",
+    "module": "rw_ble_event_cntl_bismaster",
+    "source_sha256": "f8412c6a46939ecb6da4c5a588dee0c1124094292ee9f346a8778c03c14befd4"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_slave.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_slave.v",
+    "module": "rw_ble_event_cntl_slave",
+    "source_sha256": "038153bc560576715342fedf63c0ee2712ba357b1eb6ae524d93f4b65d50fcb7"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_bisslave.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_bisslave.v",
+    "module": "rw_ble_event_cntl_bisslave",
+    "source_sha256": "ea0c3bbca402bc444d32081b0aa85f891243ba4727740e37a1d647438d290cc3"
+  },
+  {
+    "source": "BLE/rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_cisslave.v",
+    "target": "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_cisslave.v",
+    "module": "rw_ble_event_cntl_cisslave",
+    "source_sha256": "e46a4d9572489cbc436bfb1ce065ebd5de4760a787a04a718533cbf9aa50e23e"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_bit_stream.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_bit_stream.v",
+    "module": "rw_ble_bit_stream",
+    "source_sha256": "b6b347b0c4ea521650b9d49f27272bdc4493b53b253694e7fe16698c82211106"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_lr_fec_enc.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_fec_enc.v",
+    "module": "rw_ble_lr_fec_enc",
+    "source_sha256": "df5dc4cd991e94b8cb89d6208c317554ca390a913483197c54603b4519dbf0bd"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdemap.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdemap.v",
+    "module": "rw_ble_lr_pdemap",
+    "source_sha256": "ecf3f783a514639649219eaabb6b73e99d4fa94fc0c4130ca8b5346092a12a31"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdetect.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdetect.v",
+    "module": "rw_ble_lr_pdetect",
+    "source_sha256": "4004c42c998f0d72ed9c27df2beece70cdefdab5d9f7476fcb43d54e3394d115"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_whitening.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_whitening.v",
+    "module": "rw_ble_whitening",
+    "source_sha256": "cb14f869490d29e1410480740d334d8bc866c9c0ee4a3a9dc67267c960280b5d"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_crc.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_crc.v",
+    "module": "rw_ble_crc",
+    "source_sha256": "cd5c59313fdc778ea9ba637c989e725f8f99a0f31fc13dbadf52ed4c4e749719"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdecoder.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdecoder.v",
+    "module": "rw_ble_lr_pdecoder",
+    "source_sha256": "07a1006ec0077cd96be298e248b6b8ef61e84eb5e171205155af7e917cd5bc0a"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pmap.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pmap.v",
+    "module": "rw_ble_lr_pmap",
+    "source_sha256": "8174cc94412ee30e6d878a1e10a24735eaae1a398811f59562b74773cbd6723b"
+  },
+  {
+    "source": "BLE/rw_ble_bit_stream/verilog/rtl/rw_ble_lr_psynchro.v",
+    "target": "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_psynchro.v",
+    "module": "rw_ble_lr_psynchro",
+    "source_sha256": "b6d6f22297616c6752b93f3b4d37bc5a341a744d3537199a5909ff2bedc7c0bd"
+  },
+  {
+    "source": "BLE/rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_fifo.v",
+    "target": "rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_fifo.v",
+    "module": "rw_ble_lr_fec_dec_fifo",
+    "source_sha256": "84123581968d1cbb34ed73dc810f10091b9f306e709fe12d10f0232117d71e40"
+  },
+  {
+    "source": "BLE/rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec.v",
+    "target": "rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec.v",
+    "module": "rw_ble_lr_fec_dec",
+    "source_sha256": "2958b0c8bfbf028472aa87b9448d769ac3ada24d76a271ec5f1914d32f97976d"
+  },
+  {
+    "source": "BLE/rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_viterbi.v",
+    "target": "rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_viterbi.v",
+    "module": "rw_ble_lr_fec_dec_viterbi",
+    "source_sha256": "0103cfcc11c3d26e213b88350efa32a4f838a9a3eda3f01557226b5662796be2"
+  },
+  {
+    "source": "BLE/rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_fsm.v",
+    "target": "rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_fsm.v",
+    "module": "rw_ble_lr_fec_dec_fsm",
+    "source_sha256": "06391bb8241896c193d1aa09ae694b4d8bc7a124d4679d553509d4f44a0fe2d9"
+  },
+  {
+    "source": "BLE/rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl_main_fsm.v",
+    "target": "rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl_main_fsm.v",
+    "module": "rw_ble_packet_cntl_main_fsm",
+    "source_sha256": "6efc2a85a7abf4743668bc59140d0be0e557b4c1fc05d1857fa6431257bbf59e"
+  },
+  {
+    "source": "BLE/rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl_em_access_fsm.v",
+    "target": "rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl_em_access_fsm.v",
+    "module": "rw_ble_packet_cntl_em_access_fsm",
+    "source_sha256": "e57880eed8b2fe22470c591b872b872a3f93a7bb9ba97793423631510ff69671"
+  },
+  {
+    "source": "BLE/rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl.v",
+    "target": "rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl.v",
+    "module": "rw_ble_packet_cntl",
+    "source_sha256": "a3cc46697f764b225a88f60f548fe0cce9a55794b9454068f19eb613aee05bcc"
+  },
+  {
+    "source": "BLE/rw_ble_freq_select/verilog/rtl/rw_ble_freq_select.v",
+    "target": "rw_ble_freq_select/verilog/rtl/rw_ble_freq_select.v",
+    "module": "rw_ble_freq_select",
+    "source_sha256": "2c9389163d81b8e6aa9c3ba188274a6623c576a19a7c88acc5b0e17b43718201"
+  },
+  {
+    "source": "BLE/rw_ble_reg/verilog/rtl/rw_ble_reg.v",
+    "target": "rw_ble_reg/verilog/rtl/rw_ble_reg.v",
+    "module": "rw_ble_reg",
+    "source_sha256": "1ff8a16171b25dfe261b96ae32753d470f397294cf0bfbfb7179eb7d994ed993"
+  },
+  {
+    "source": "BLE/rw_ble_top/verilog/rtl/rw_ble_top_tglp_ext.v",
+    "target": "rw_ble_top/verilog/rtl/rw_ble_top_tglp_ext.v",
+    "module": "rw_ble_top_tglp_ext",
+    "source_sha256": "cc813718540481434c10e4f0e1ff82dc224908ece4bec0f204611ddb601b7c40"
+  },
+  {
+    "source": "BLE/rw_ble_top/verilog/rtl/rw_ble_core_cntl.v",
+    "target": "rw_ble_top/verilog/rtl/rw_ble_core_cntl.v",
+    "module": "rw_ble_core_cntl",
+    "source_sha256": "5cec026c194220b800295ed79e7409f9eecd39ae8d61b0d040e532835e571aa1"
+  },
+  {
+    "source": "BLE/rw_ble_top/verilog/rtl/rw_ble_top.v",
+    "target": "rw_ble_top/verilog/rtl/rw_ble_top.v",
+    "module": "rw_ble_top",
+    "source_sha256": "9f681917498d4a41e27fe1aac06d1d3cb689f9b0fd4957ab4785c81829f1741f"
+  },
+  {
+    "source": "BLE/rw_ble_top/verilog/rtl/rw_ble_core.v",
+    "target": "rw_ble_top/verilog/rtl/rw_ble_core.v",
+    "module": "rw_ble_core",
+    "source_sha256": "dd923875f45dd9293e23deed0b211539828ea193557c92d53cb5ebf01d88d953"
+  },
+  {
+    "source": "BLE/rw_ble_top/verilog/rtl/rw_ble_misc_logic.v",
+    "target": "rw_ble_top/verilog/rtl/rw_ble_misc_logic.v",
+    "module": "rw_ble_misc_logic",
+    "source_sha256": "435993bca549c3610efa36c77ae483e33124d2b7b3dcafc897af9e72f9a247c5"
+  },
+  {
+    "source": "BLE/rw_ble_em_cntl/verilog/rtl/rw_ble_em_cntl.v",
+    "target": "rw_ble_em_cntl/verilog/rtl/rw_ble_em_cntl.v",
+    "module": "rw_ble_em_cntl",
+    "source_sha256": "bf2c45eb4da3a1c23578477322f2a31474428b4355b52a059f9e2614d524d0c6"
+  }
+]
