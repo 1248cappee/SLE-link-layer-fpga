@@ -107,7 +107,13 @@ module rw_ble_top #(parameter integer EM_BYTES=131072,FIFO_DEPTH=64,CLK_HZ=20000
  output wire resolve_matched,
  output wire resolve_error,
  output wire [15:0] resolve_result_tag,
- input wire resolve_result_ready
+ input wire resolve_result_ready,
+ output wire [29:0] debug_slot,
+ output wire [9:0] debug_fine,
+ output wire debug_busy,
+ output wire [4:0] debug_errors,
+ output wire [7:0] debug_fifo_count,
+ output wire [71:0] debug_event
 );
  wire [9:0] actual_start_fine;
  wire [29:0] actual_start_slot;
@@ -307,6 +313,12 @@ always @(posedge clk or negedge rst_n) begin
   endcase
  end
 end
+assign debug_slot=now_slot;
+assign debug_fine=now_fine;
+assign debug_busy=controller_busy;
+assign debug_errors=error_status;
+assign debug_fifo_count=fifo_count;
+assign debug_event=head_event;
  rw_cm_timing_gen #(.CLK_HZ(CLK_HZ)) u_rw_cm_timing_gen(
   .clk(clk),
   .rst_n(core_rst_n),

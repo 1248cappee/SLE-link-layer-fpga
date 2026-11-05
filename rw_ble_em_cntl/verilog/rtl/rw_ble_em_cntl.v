@@ -35,7 +35,11 @@ module rw_ble_em_cntl #(parameter integer EM_BYTES=131072)(
    if(saved_be[b]) mem[saved_addr[16:2]][b*8+:8]<=saved_data[b*8+:8];
  end
  assign busy=state!=0;
- always @(posedge clk or negedge rst_n) begin
+ // All BRAM address/data/enable registers use synchronous reset. The board
+ // synchronizes reset release. A previously accepted write can commit on the
+ // reset sampling edge; reset suppresses its ACK. Software reinitializes EM
+ // ownership objects after hard reset. No asynchronous reset drives RAM EN.
+ always @(posedge clk) begin
   if(!rst_n) begin
    state<=0;owner<=0;next_owner<=0;ack<=0;fault<=0;rdata<=0;
    saved_addr<=0;saved_data<=0;saved_be<=0;saved_write<=0;saved_fault<=0;

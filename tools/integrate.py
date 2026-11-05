@@ -185,6 +185,13 @@ for ins in INSTANCES:
         for p,n in ins['mapping'].items():
             if p not in ('clk','rst_n'):EXTERNAL[n]=ins['ports'][p]
 
+# Read-only board diagnostics. No keys, context banks or payload are exposed.
+for name,width,source in [('debug_slot','[29:0]','now_slot'),('debug_fine','[9:0]','now_fine'),
+ ('debug_busy','','controller_busy'),('debug_errors','[4:0]','error_status'),
+ ('debug_fifo_count','[7:0]','fifo_count'),('debug_event','[71:0]','head_event')]:
+    net(name,width);EXTERNAL[name]=('output',width)
+    extra('top',f'assign {name}={source};')
+
 def signals(text):return set(re.findall(r'\b[A-Za-z_]\w*\b',text))&NETS.keys()
 def used(ins):return set().union(*(signals(n) for n in ins['mapping'].values()))
 def wrapper(name,children,group,boundary):

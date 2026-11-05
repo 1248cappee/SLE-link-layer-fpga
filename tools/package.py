@@ -38,6 +38,9 @@ with zipfile.ZipFile(ROOT.parent/'BLE.zip') as archive:
         desc,sections,tests=purpose(row['module'])
         if 'packet_cntl' in row['module'] or row['module'] in ('rw_ble_core','rw_ble_core_cntl','rw_ble_top'):
             tests+=['tb_appendix_f','tb_secure_chain']
+        if row['module']=='rw_ble_em_cntl':tests+=['tb_em_reset','tb_board_suite']
+        if row['module'] in ('rw_ble_reg','rw_ble_top','rw_ble_core','rw_ble_core_cntl','rw_ble_packet_cntl'):
+            tests+=['tb_board','tb_board_suite']
         refs=[]
         if row['module']=='rw_ble_reg':refs=[dict(book='01',sheet='字段定义',rows=[6,8,9,10,11,12,13,14,17,18,19,20,21,22,23,24,25,26,27,30,31,32,33,34,35,36,41])]
         elif 'em_cntl' in row['module']:refs=[dict(book='02',sheet='对象布局',rows=[5,6,7,8,14,15,16,17])]
@@ -50,8 +53,11 @@ with zipfile.ZipFile(ROOT.parent/'BLE.zip') as archive:
             ports_changed={k:{'old':old_ports[k],'new':new_ports[k]} for k in new_ports.keys()&old_ports.keys() if new_ports[k]!=old_ports[k]},
             resource_sources=['01_SLE_SCH_寄存器表_v1.0.xlsx','02_SLE_SCH_共享内存表_v1.0.xlsx','03_SLE_SCH_状态时序表_v1.0.xlsx']))
 (ROOT/'docs/module_mapping.json').write_text(json.dumps(mapping,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-rtl=sorted(p for p in ROOT.rglob('*.v') if not {'external','build','verification'}&set(p.relative_to(ROOT).parts))
+rtl=sorted(p for p in ROOT.rglob('*.v') if not {'external','build','verification','board'}&set(p.relative_to(ROOT).parts))
 (ROOT/'rtl.f').write_text('+incdir+common/rtl\n'+'\n'.join(str(p.relative_to(ROOT)).replace('\\','/') for p in rtl)+'\n',encoding='ascii')
+board_rtl=sorted((ROOT/'board/rtl').glob('*.v'))
+if board_rtl:
+    (ROOT/'board.f').write_text((ROOT/'rtl.f').read_text()+'+incdir+board/rtl\n'+'\n'.join(p.relative_to(ROOT).as_posix() for p in board_rtl)+'\n',encoding='ascii')
 groups={x['target'].split('/')[0] for x in mapping}
 for group in sorted(groups):
     rows=[r for r in mapping if r['target'].startswith(group+'/')]

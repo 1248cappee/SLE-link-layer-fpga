@@ -1,0 +1,211 @@
+{
+  "tool": "Vivado 2020.2 XSim",
+  "source_hashes": {
+    "verification/aes_sm4_ccm.mem": "f28817f53191056d0a00402911f631473279f8f580559fa22235a2d9a72d9a35",
+    "verification/board_test_tasks.vh": "e7fb7471bc2f9b94ed0c4b523633a5c8e97c5d4b7fa8874d9a18a18eeec50ecf",
+    "verification/board_vectors.mem": "fe7bd0015951c4ba2c60072ae58a81eb9356ea7c5ae950dd4b34d1640a9ed25d",
+    "verification/register_offsets.mem": "b1dd20a5767b4ea026f2fae21192178f03768a5305afbffde6fd0991601c9318",
+    "verification/secure_chain.mem": "1f478d35471b10d3e2213545d83cd1b67e0e47bc5e2b178d653c182a9679ee2e",
+    "verification/system_harness.vh": "a5aa52a57b6e5efa5baa6114c276bbee93eca029dba575a62e7ff725e9d62fc2",
+    "verification/system_ports.vh": "2e593c0c731f6ae3b4c1ba665f91f7bb443e1e6f77bcd65d74f3cce92f88f95c",
+    "verification/tb_appendix_f.sv": "1ebdc78fe1f26bbaf7f36c7e5d3581fcda6cd37f45257d034f4d316fdea8cfb0",
+    "verification/tb_auxiliary.sv": "7bf043e2cfc39deb12e2274304f73c4bdf2b4bec72907f95b1cc63b0eec52619",
+    "verification/tb_board.sv": "bccb5631b865ce8c42279a4a331d41dee7ee6bdc7ac45bc6fd26eff46aa331c3",
+    "verification/tb_board_axi.sv": "c8ee696642c15123f7727989fadf96e378ad530c0a989bad543adddde6581863",
+    "verification/tb_board_suite.sv": "71a0eea8635c83d297025b531731612c54e328e1f775d228216a08c6e15abba3",
+    "verification/tb_bus.sv": "0473d70071e09ca731e0b6dccaf5ca09e26212bc50457f4a1638dc8cd9165f8b",
+    "verification/tb_control.sv": "85714126332bc90bb2b5911940d02bf277743be3fca9ca94dff8a2849e0624d7",
+    "verification/tb_crypto.sv": "b7f2212ad4ab9470d4c3bd1901e14aad3f181791673923a621c739171c17c017",
+    "verification/tb_em_reset.sv": "d1fa44d53a9494361ad2a8cf37cd935b45e95360565a009f91bd9a5b3acf5cbe",
+    "verification/tb_lengths.sv": "7fbaedfcdef96da2c5d8b3dcff7a2bb1591624ac33f086a9f30b93d64219e593",
+    "verification/tb_low_power.sv": "51e24f701518d21a5318a830c7dad3947a581b4a23dfcfb719f16afbf4cfe604",
+    "verification/tb_primitives.sv": "d15ca673ee4449a6f0ba557202036b63c7eb20d780659ff34475e171c5092d9e",
+    "verification/tb_recovery.sv": "eaad1e67848d0a1273e7414f2bf17dc0aad7da955cf6cb807a5525ac53dbad76",
+    "verification/tb_registers.sv": "f544ea6649cf7d9b81bd7583fac54e073cfc2dca20abcaa82a27543f8a6715a7",
+    "verification/tb_resources.sv": "903ea4de96a42f089669d1aa2f531a96f30673e4189dbc5df9b6b31a60246840",
+    "verification/tb_scheduler.sv": "c63646ab21d6934b6845a85761f4b2ddbc1868c44319be657db2768764d2882b",
+    "verification/tb_secure_chain.sv": "6f19585249cab30f04494fe8e3cc03e316a59e2c5fabdd7617daff0493ea6ae9",
+    "verification/tb_secure_system.sv": "a0bea531b249f3976ba05275990f6fdb0369b46869d5531a58e30b159582ea72",
+    "verification/tb_stream_crypto.sv": "59557e04cb2759c5013589cd535a62f54ff8dc5254fa50a5b52972df60d6ec00",
+    "verification/tb_submit_threshold.sv": "5895efcfd8c13c428df8406b8798e3ab3dbe77526b46d65012e4e88181c9805d",
+    "verification/tb_system.sv": "80db57f3bc784cdce96f84866b7c3ff0282ebaa7d02a3d11bec059194ddf428a",
+    "verification/tb_time_fifo.sv": "8c86117e7333e5d9d8cefbf22aa8c3e9a98165fec81d1ea3b7e76229618a13fe",
+    "board/rtl/sle_axi_xbar.v": "3f18b0b71994310cacc66f28ea2554c4c0368149c5d5eefae0423cd2a2f4e5d1",
+    "board/rtl/sle_board_axi.v": "6c2b433cc2981bb52e865dca19f6afa145c33ad73bbad08fb5a7b85dfb0ef9ee",
+    "board/rtl/sle_board_core.v": "331289ff3a2fcb2e0238092f4193d09240f5cf8a265cc25840782bdf1c3c3847",
+    "board/rtl/sle_board_sequence.v": "9e73853227978d36b7671d4fbee84f05609ab1ae5dbb1c02e55e79cd6e1782e7",
+    "board/rtl/sle_phy_test.v": "0a1a1fde7a0318078e45b7f6cd28cedd928a2974fe08e3e32064ec29396f0608",
+    "common/rtl/rw_cm_activity_scheduler.v": "1c9bc8399c461d6b6237666ce5bf90d0931492b758906d8469d93a142a6cbe9e",
+    "common/rtl/rw_cm_ahb_if.v": "99ae42e2241369d5426e4383773a4bb7795e8850c63143136c6230314af042a5",
+    "common/rtl/rw_cm_coex_if.v": "2702c0a74843415b6d8c1080c474de2d0df48fccb4e0e9d50941b8ad828258ba",
+    "common/rtl/rw_cm_crypto_engine.v": "53d7e5489eafa3eec1241d8c1720efb1d28cee2fde1eecd9b22e36ad33a82c44",
+    "common/rtl/rw_cm_diag_cntl.v": "4e52ac0b994d6dbf6a6d4a4cd0a2b62c7e1d9fc22771353a29de8a0d9b2261d8",
+    "common/rtl/rw_cm_int_cntl.v": "bc1b7f381b3ac9affadb71798248ac89d1197f797371e898c00d08060b3726bb",
+    "common/rtl/rw_cm_radio_cntl.v": "292e1e686b4d7471f2c91babf62f8601a4e008e286f7928e8db420f68a1b8d5c",
+    "common/rtl/rw_cm_timing_gen.v": "ec806c7716dc8e8eecc40097b8b51daad14baee374136d450601e7ee387c71be",
+    "common/rtl/rw_cm_timing_gen_lp.v": "94a2040e641cb8b4ae1b3e312995255145c0160e63204eff398a683c8a8489ef",
+    "common/rtl/rw_cm_wlan_coex_cntl.v": "7eca94eb0471c6b7fdec96756815041feb568cb2d6dfe872b4fb1c2206aa0eec",
+    "common/rtl/rw_cm_xbar_if.v": "8035844af986446f3636fb07e8314f4f26645e0dd067b472a9265f4f0b1de020",
+    "common/rtl/sle_block_cipher.v": "947f509bc9729409ba2f9f87f8d0f2cfb238c4bc3010738dc6cf50912c24c2e8",
+    "common/rtl/sle_ccm_stream_tx.v": "4f9923818bb2723f0d12364ea9d69f0fc22b14f0b9f2dd2d2db60141b54ec3cd",
+    "common/rtl/sle_cmac.v": "45bbf8b8c24a89bcf75ec4a31f362736bb30d5b0c43bfeb608fb4beefd8b013b",
+    "common/rtl/sle_defs.vh": "8771521594ebe66750e463cfb97087a9143c0146d45aaf9d3f3a0f149f03517a",
+    "common/rtl/sle_event_fifo.v": "fab9639f6621cb64ce326e734d999e0f3fbada9997d865f62adc7fa711b1409e",
+    "common/rtl/sle_sboxes.vh": "5c222a97928cada5b639d8f82515d1bd9e4402618af159e95d60ed4853c37f7e",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_bit_stream.v": "2b2ee123ff6e9491669c51ee0dc64a3fc145b98199383690f4cb93af5ca6ef2a",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_crc.v": "ab6429e307ff11f5102db48a1c6fc801d277c3bf88b3d3cba5c5e6d4efbe594a",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_fec_enc.v": "29710d530a7a4ec749324d5cb783f5f9f991c9a56ab86f202f283935ce8ef3be",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdecoder.v": "208d5ba60ca0a2d8042d5a6c325c78375412f3325193e830d048cb02d2f23548",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdemap.v": "ef0becc67dce6decdd3138453c815e715627ed7f1b89228b940f7b13fe57c704",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pdetect.v": "d82231c5bb8b3869c286db3960f2a4ab8d65e6ad4dece6d6a705e412ba5b83e3",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_pmap.v": "a04fc7e21a5c6ee2b5c050cc356d4a76d6345597f24642efaafc94f6236b02ea",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_lr_psynchro.v": "49a448948e4adfa1701a6713091fd1ecf08cc4ce35d7fdebeeabc46957dd7983",
+    "rw_ble_bit_stream/verilog/rtl/rw_ble_whitening.v": "ff9540219aa65c8d539a5415cfd83518a27a1950731bc1179d436f782e5eccf1",
+    "rw_ble_em_cntl/verilog/rtl/rw_ble_em_cntl.v": "7a53809af62be6cd021ad2913d54619c141a1a69159899b18f0ec8662fa8b22a",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl.v": "aa378d27e4f60e5d0bba0b08fdc1d4883932d12c3c403c930965d879af752b5c",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_advert.v": "45630287c8f1462bd786ae0f7ace75a5fecbcab3d0246400d8b6d7b6e6dbf57f",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_bismaster.v": "6adb7034a31e037be34258be3debc956fd3261355484d8056fa5a4d14a3740f5",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_bisslave.v": "98f960ec8fac40f23c35c1765bba81d239a6bd9cb33367b13be4bb785bad7426",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_cismaster.v": "74d2cca46fbd67923c590d35c2b9cc42b3a6e5665f830a816ba29149d0129bae",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_cisslave.v": "f63f7c9af17a40ff5ef415aacd764403545a1fa916133865d43b52e1d678417b",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_em_manager.v": "7cbb0d7ca1e63c8f0cdda444568e6fe6558c5cbc71896032c8ca7627fd86df66",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_iso0master.v": "f0dedd82a3d05666834f912c3faa7e2bec7938fb35b5e2bf6e22d1c84d630411",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_iso0slave.v": "45122452f181da17aaf3e95523a7533ae644437fcccd455586967eaa7bf5cdbc",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_main.v": "109a932afc60c523b24fd3c17881406838e71a538c563082f60948086677edaa",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_master.v": "289b024fae93c1074aa017f14c8c63f3deab4aa28cc764d045e320ffa5c0cd75",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_pti.v": "d8be6745c0146a49f8019b5dbf7dfaeb56adfda10a68ff439e7f226a01128f9f",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_scanch.v": "793d65f4e0260264a02c31ff84a6fb9a0db8068c80e1d8d1bd22076828242a3b",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_scaninit.v": "c7f5eeb2f574c3bb35e80f6d1c46a540d76f632195407e6d02e96c0f60848d99",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_slave.v": "501f88b76c150d964cb18590cdc6a5ee8befdf995b970ce61b7ff69cac2ff3f1",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_test.v": "253642d79640f72c5b2307920f52c94be0dca7dc9f20d4591a3288d3e0a74ef5",
+    "rw_ble_event_cntl/verilog/rtl/rw_ble_event_cntl_timers.v": "14e89eed556746c7c180809b7cec8823322ac10c2d16f84f74b28b333eedbae5",
+    "rw_ble_freq_select/verilog/rtl/rw_ble_freq_select.v": "dcb7c23688e05cd8e3087089babfc2e330f4888beae38bb1a9ca2486a1a49222",
+    "rw_ble_list_search_engine/verilog/rtl/rw_ble_list_search_engine.v": "be7442ac15e5724e9ea8356d0f9e006cb3970f3f0cd6dfd17098b36704467ec7",
+    "rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec.v": "749ea262f9571c9ce7c526f60bd65d34d8f08ed82020d037df2bc3289d87e068",
+    "rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_fifo.v": "fa68fefefaa0ee2fff65b2981c809bcc619d9368cb2b24a9a890b3b7887a8598",
+    "rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_fsm.v": "eafbcd882fc8662cbefdd20548942c8c2d1338ff2098a6b9df63af00ede70ede",
+    "rw_ble_lr_fec_dec/verilog/rtl/rw_ble_lr_fec_dec_viterbi.v": "42373cf5862ca9b761a09286ac3b06ec034ed976be5f8ce637acd39187414c34",
+    "rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl.v": "26de91d13cd6ab9662ea23beadc52888429e2ec6424441ca1bbfcbc9b4d4a5ad",
+    "rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl_em_access_fsm.v": "2e0a5fb8138f3a024776ad38418f7b8054497553d6e5384635d77906ab0e5c60",
+    "rw_ble_packet_cntl/verilog/rtl/rw_ble_packet_cntl_main_fsm.v": "b21540a027692280c0f7f4d6b1df537e00172c2c35892f3718dd3d3954e24571",
+    "rw_ble_ral_search_engine/verilog/rtl/rw_ble_ral_search_engine.v": "6b5db6b07ea9a9eb1e242ea84d8f6356d4014e3e4538fea39f45037bef15b812",
+    "rw_ble_reg/verilog/rtl/rw_ble_reg.v": "be2d8ed1eb6e23cbd90beddbeab5b3b0049f257c93d8b596a63ddd5ffde591ff",
+    "rw_ble_top/verilog/rtl/rw_ble_core.v": "b3b3ab70f79433c64bfdbc36faa97fee355bfb174d7d89ccaf06d934c78193cf",
+    "rw_ble_top/verilog/rtl/rw_ble_core_cntl.v": "7f3ceaaf9905ad18d9859c4a7f463305ac98f6fb23b4dcc96c8e59e4594c0440",
+    "rw_ble_top/verilog/rtl/rw_ble_misc_logic.v": "b17883fa1f174d8aebd3c95aabacb3f0c6526474985590c00291b1aa356a42bd",
+    "rw_ble_top/verilog/rtl/rw_ble_top.v": "0e32208f06c63c8995ecba582bbe0cd0688bd09e2beb12477cabd6f0b3ca29be",
+    "rw_ble_top/verilog/rtl/rw_ble_top_tglp_ext.v": "8dfef9178622575fef3ec2fc7a2ab68f1b2478018af953b57e60b603ac8eea20"
+  },
+  "results": [
+    {
+      "test": "tb_primitives",
+      "passed": true,
+      "seconds": 10.17
+    },
+    {
+      "test": "tb_crypto",
+      "passed": true,
+      "seconds": 10.62
+    },
+    {
+      "test": "tb_stream_crypto",
+      "passed": true,
+      "seconds": 9.94
+    },
+    {
+      "test": "tb_time_fifo",
+      "passed": true,
+      "seconds": 9.6
+    },
+    {
+      "test": "tb_registers",
+      "passed": true,
+      "seconds": 11.14
+    },
+    {
+      "test": "tb_control",
+      "passed": true,
+      "seconds": 9.46
+    },
+    {
+      "test": "tb_low_power",
+      "passed": true,
+      "seconds": 10.28
+    },
+    {
+      "test": "tb_bus",
+      "passed": true,
+      "seconds": 9.98
+    },
+    {
+      "test": "tb_auxiliary",
+      "passed": true,
+      "seconds": 8.74
+    },
+    {
+      "test": "tb_system",
+      "passed": true,
+      "seconds": 12.57
+    },
+    {
+      "test": "tb_scheduler",
+      "passed": true,
+      "seconds": 12.59
+    },
+    {
+      "test": "tb_recovery",
+      "passed": true,
+      "seconds": 13.56
+    },
+    {
+      "test": "tb_lengths",
+      "passed": true,
+      "seconds": 16.43
+    },
+    {
+      "test": "tb_secure_system",
+      "passed": true,
+      "seconds": 13.05
+    },
+    {
+      "test": "tb_appendix_f",
+      "passed": true,
+      "seconds": 9.34
+    },
+    {
+      "test": "tb_secure_chain",
+      "passed": true,
+      "seconds": 11.78
+    },
+    {
+      "test": "tb_resources",
+      "passed": true,
+      "seconds": 10.95
+    },
+    {
+      "test": "tb_submit_threshold",
+      "passed": true,
+      "seconds": 9.36
+    },
+    {
+      "test": "tb_em_reset",
+      "passed": true,
+      "seconds": 9.16
+    },
+    {
+      "test": "tb_board_axi",
+      "passed": true,
+      "seconds": 10.98
+    },
+    {
+      "test": "tb_board",
+      "passed": true,
+      "seconds": 14.95
+    },
+    {
+      "test": "tb_board_suite",
+      "passed": true,
+      "seconds": 35.01
+    }
+  ]
+}

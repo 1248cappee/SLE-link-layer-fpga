@@ -1,0 +1,21 @@
+{
+  "scope": "DIGITAL_TESTER_NO_PHY",
+  "simulation_passed": true,
+  "simulation_tests": 22,
+  "board_reset_ip_passed": true,
+  "implementation_present": true,
+  "board_image_matches": true,
+  "base_board_passed": true,
+  "closed_loop_board_passed": true,
+  "board_passed_count": 44,
+  "board_expected_count": 44,
+  "missing_or_failed": [],
+  "time_ila": {
+    "samples": 4096,
+    "fine_edges": 410,
+    "clocks_per_fine": 10
+  },
+  "time_ila_error": null,
+  "real_phy_tested": false,
+  "rf_tested": false
+}
