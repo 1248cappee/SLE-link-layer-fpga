@@ -10,9 +10,13 @@
 & SLE/tools/sim.ps1
 & SLE/board/tools/build.ps1
 & SLE/board/tools/run.ps1
+# 当前用户要求：三轮PS初始化/下载/87场景，明确排除长压力测试。
+& SLE/tools/accept_cm.ps1 -SkipPressure
 ```
 
 脚本需要本机已安装的 Vivado/Vitis 2020.2。`build.ps1` 在短英文临时路径构建；产物及报告收集到 `SLE/build/board/`。Windows 受限环境可能阻止 Vivado 子任务、WMI 或 cs_server 运行库提取，应在具有相应本机权限的终端执行。无需安装新工具。
+
+长压力已按用户要求停止。只有重新得到授权后才执行不带SkipPressure的完整验收入口；功能报告中的USER_EXCLUDED不代表压力通过。功能交付包使用FUNCTIONAL文件名，包含压力的原完整VERIFIED验收仍保留独立条件。
 
 构建脚本同时运行实际生成的 `proc_sys_reset` IP 混合语言仿真，检查 PS/辅助/失锁/调试复位及释放。辅助输入是低有效，固定接1；构建时检查该极性。已下载同一镜像、PS时钟保持且仅需重复测试时，可使用 `run.ps1 -TestsOnly`。
 
@@ -53,8 +57,10 @@ PS 配置来自本机物理组提供的 P101 `member567_system.tcl`（源文件 
 
 ## 测试证据
 
-`tools/cases.py` 产生44个同源场景，`cases/suite.tcl` 用于 JTAG，`verification/board_vectors.mem` 用于 `tb_board_suite`。测试由软件比较实际字节、描述符和事件，不仅查看 PASS 位。密码学期望来自现有独立 AES/SM4 参考向量。
+`tools/cases.py` 及 `tools/cm_cases.py` 产生87个同源场景，包含原44项。`cases/suite.tcl` 用于 JTAG，`verification/board_vectors.mem` 用于 `tb_board_suite`。测试由软件比较实际字节、描述符和事件，不仅查看 PASS 位。密码学期望来自独立 AES/SM4 参考向量。CM控制、序列指令12..17、首错与压力测试接口见 [CM_INTERFACE.md](../docs/CM_INTERFACE.md)。
 
 真实执行生成 `board_results.json`、`board_test.log`、每场景 ILA CSV 和16项竞争的原始事件日志。ILA trace 从低位起：0 LL error、1 LL wait、2 LL req、3 host req、4 TX error、5 TX quiescent、6 RX drain、7 RX stop、8 RX sync、9 RX IRQ、10 RX rvalid、11 RX write、12 RX req、13 TX stop、14 TX done、15 TX started、16 TX prepared、17 TX launch、18 TX last、19 TX ready、20 TX valid、21 cfg ready、22 cfg valid、23 IRQ、24 LL busy、25 sequence failed、26 done、27 busy；`[35:28]` reason、`[45:36]` PC、`[77:46]` 模型错误、`[85:78]` FIFO计数、`[90:86]` LL错误、`[162:91]` 队首、`[172:163]` fine、`[202:173]` slot、`[234:203]` 场景ID，其余为0。
 
-验收必须分别记录仿真、完整实现、基础板测和接口测试器闭环板测。无线协议过程的完整实现、真实 PHY 和空口时序仍需后续独立验收。
+低256位中的235..255保持为0；384位扩展中的[256]为主时钟使能，[260:257]为休眠状态，[292:261]为唤醒计数，[324:293]为休眠计数，[356:325]为实际主时钟计数，[383:357]为0。`tb_board_suite`逐周期检查这份ILA位布局。
+
+验收必须分别记录仿真、完整实现、基础板测和接口测试器闭环板测。CM完整板测还要求3轮重新初始化/下载、每轮10,000次休眠/唤醒和不少于30分钟混合任务。无线协议过程的完整实现、真实 PHY 和空口时序仍需后续独立验收。

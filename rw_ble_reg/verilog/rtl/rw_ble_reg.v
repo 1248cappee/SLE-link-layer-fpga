@@ -109,7 +109,7 @@ module rw_ble_reg #(parameter integer EM_BYTES=131072, FIFO_DEPTH=64)(
       12'h124:rdata<=event_type==3?{2'd0,event_slot}:0;
       12'h128:rdata<=event_type==3?{22'd0,event_fine}:0;
       12'h400:rdata<=32'h534c4558; // SLEX
-      12'h404:rdata<=32'h00010000;
+      12'h404:rdata<=32'h00010001;
       12'h408:rdata<=EM_BYTES;12'h40c:rdata<=FIFO_DEPTH;
       12'h410:rdata<=phy_caps;12'h414:rdata<=32'h1e00fa7d;
       // Undefined legacy fields are RAZ/W0, not invented BLE behavior.
@@ -139,7 +139,7 @@ module rw_ble_reg #(parameter integer EM_BYTES=131072, FIFO_DEPTH=64)(
       12'h060:if(merged[31:5]!=0) invalid=1;else error_ack<=merged[4:0];
       12'h0e0:begin
        if((merged & ~32'h00000307)!=0 ||
-          (merged[9] && (!scheduler_idle || schedule_enable || armed!=0 || merged[2:0]!=0))) invalid=1;
+          (merged[9] && (busy || !scheduler_idle || schedule_enable || armed!=0 || merged[2:0]!=0))) invalid=1;
        else begin
         if(be[0]) begin arm_we<=1;arm_data<=merged[2:0];end
         if(be[1]&&wdata[8]) snap<=1;

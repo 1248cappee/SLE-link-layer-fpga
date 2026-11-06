@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_low_power;
- reg low_power_clk=0;always #25 low_power_clk=~low_power_clk;
+ reg low_power_clk=0;always #15258.7890625 low_power_clk=~low_power_clk;
  reg low_power_nrst=0,load=0,enable=1;reg [29:0] load_slot=0;reg [9:0] load_fine=0;
  wire [29:0] slot;wire [9:0] fine;
  rw_ble_top_tglp_ext dut(.*);

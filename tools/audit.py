@@ -2,6 +2,10 @@
 from pathlib import Path
 import json,hashlib,re
 ROOT=Path(__file__).resolve().parents[1]
+if (ROOT/'docs/cm_mapping.json').exists():
+    import runpy
+    runpy.run_path(str(ROOT/'tools/audit_cm.py'),run_name='__main__')
+    raise SystemExit(0)
 def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def fresh(hashes):return bool(hashes) and all((ROOT/n).exists() and digest(ROOT/n)==h for n,h in hashes.items())

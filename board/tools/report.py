@@ -28,7 +28,10 @@ def check_time_csv(path):
 def main():
     tests=json.loads((ROOT/'build/test_results.json').read_text())
     fresh=all((ROOT/n).exists() and digest(ROOT/n)==h for n,h in tests['source_hashes'].items())
-    simulation=fresh and len(tests['results'])==22 and all(t['passed'] for t in tests['results'])
+    current={p.relative_to(ROOT).as_posix() for p in ROOT.rglob('*') if p.is_file() and p.suffix in ('.v','.vh','.sv','.mem') and not {'build','external'}&set(p.relative_to(ROOT).parts)}
+    fresh=fresh and current==set(tests['source_hashes'])
+    required=set(re.findall(r'\btb_\w+', (ROOT/'tools/sim.ps1').read_text()))
+    simulation=fresh and {t['test'] for t in tests['results']}==required and all(t['passed'] for t in tests['results'])
     implementation=(OUT/'implementation.json').exists() and (OUT/'manifest.json').exists()
     if implementation:
         meta=json.loads((OUT/'manifest.json').read_text())
@@ -47,8 +50,8 @@ def main():
     reset_log=ROOT/'build/reset_ip_sim.log'
     reset_ip=reset_log.exists() and 'SLE_BOARD_RESET_IP_PASS' in reset_log.read_text(errors='replace')
     result={'scope':'DIGITAL_TESTER_NO_PHY','simulation_passed':simulation,'simulation_tests':len(tests['results']),'board_reset_ip_passed':reset_ip,
-      'implementation_present':implementation,'board_image_matches':image_matches,'base_board_passed':base<=passed and bool(time_evidence) and image_matches,
-      'closed_loop_board_passed':passed==expected and captures and bool(time_evidence) and image_matches,
+      'implementation_present':implementation,'board_image_matches':image_matches,'base_board_passed':base<=passed and bool(time_evidence) and image_matches and implementation,
+      'closed_loop_board_passed':passed==expected and captures and bool(time_evidence) and image_matches and implementation,
       'board_passed_count':len(passed),'board_expected_count':len(expected),'missing_or_failed':sorted(expected-passed),
       'time_ila':time_evidence,'time_ila_error':time_error,'real_phy_tested':False,'rf_tested':False}
     (OUT/'acceptance.json').write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n')

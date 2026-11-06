@@ -1,3 +1,7 @@
+# CM扩展更新
+
+公共模块使用 CM ABI 1.1，新增时钟/休眠、调度网格、安全配置及软件CCM合同见 [CM_INTERFACE.md](CM_INTERFACE.md)。原资源表已定义字段和对象步长保持不变。
+
 # 链路层及业务接口合同
 
 ## 时钟、复位及主机访问
@@ -18,7 +22,7 @@ BRAM 控制器在时钟边沿同步采样复位，其地址、写数据和使能
 
 INTSTAT 的 FIFO/ERROR 为电平，Timer/CLOCK 为锁存；INTACK 仅 W1C Timer/CLOCK。ACTFIFOSTAT、当前 RX 描述符指针、START/END/SKIP 时间都来自同一 FIFO 队首；读不弹出，只有 FIFO_POP 消费。空队列 POP 是 BAD_CMD。事件入队前完成相关数据/状态及 DONE 回写；同一任务先收发事实再终态，终态消费前 ET 索引仍有硬件所有权。软件回调、代次及句柄留在软件镜像中。
 
-静态扩展寄存器：0x400=`SLEX`，0x404=ABI 1.0，0x408=EM 字节数，0x40c=FIFO 深度，0x410=PHY 真实能力输入，0x414=`0x1e00fa7d`（30 位粗计数、250 fine/slot、125us）。均 RO。
+静态扩展寄存器：0x400=`SLEX`，0x404=ABI 1.1，0x408=EM 字节数，0x40c=FIFO 深度，0x410=PHY 真实能力输入，0x414=`0x1e00fa7d`（30 位粗计数、250 fine/slot、125us）。均 RO。
 
 ## 共享内存布局与访问时序
 

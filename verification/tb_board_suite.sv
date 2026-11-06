@@ -3,8 +3,16 @@ module tb_board_suite;
  reg clk=0;always #25 clk=~clk;
  reg rst_n=0,host_req=0,host_write=0;reg [18:0] host_addr=0;
  reg [31:0] host_wdata=0;reg [3:0] host_be=15;
- wire host_wait,host_error;wire [31:0] host_rdata;wire [255:0] trace;
+ wire host_wait,host_error;wire [31:0] host_rdata;wire [383:0] trace;
  sle_board_core dut(.*);
+ // These are the physical ILA bit positions used by the JTAG acceptance script.
+ // Check the packing during every scenario, including actual clock gating.
+ always @(negedge clk)if(rst_n)begin
+  if(trace[256]!==dut.ll_clock_enable || trace[260:257]!==dut.debug_sleep_state ||
+     trace[292:261]!==dut.debug_wake_count || trace[324:293]!==dut.debug_sleep_count ||
+     trace[356:325]!==dut.debug_main_clocks || trace[234:203]!==dut.case_id)
+   $fatal(1,"ILA trace ABI mismatch");
+ end
  reg [31:0] commands[0:524287];reg [31:0] result;integer pc=0,case_id=0;
  integer winner,kind,idx,starts,txs,ends;reg [15:0] seen;reg [31:0] event_head;
  task bus(input bit wr,input [18:0] a,input [31:0] v,input [3:0] b);

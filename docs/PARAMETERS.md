@@ -13,7 +13,7 @@
 - 事件：0NONE、1START、2END、3SKIP、4CANCEL、5ERROR、6TX、7RX。原因：0OK、1LATE、2CONFLICT、3SW_CANCEL、4BAD_DESC、5BUS_FAULT、6WINDOW_END、7NO_BUFFER。收到CRC/MIC失败的RX事实不等价于任务ERROR，也不等价于业务交付成功，须读取结果位。
 - 信道：当前实现2.4GHz，数据图76bit，扫描图79bit。PRN/重映射使用SLE算法；固定PHY板级桥的信道76不是通用业务默认信道。其他频段不宣告实现。MCS有效0..12；合法MCS的PHY吞吐/最大包及对应airtime仍由PHY能力约束。
 - CRC：0/1是24bit选项，2是32bit，3非法；实际算法位于冻结PHY，不在同名弹性封装中重新计算。
-- 安全：0明文、1AES-CCM、2SM4-CCM；密钥128bit、nonce13B、MIC4B、关联数据单字节0。TX/RX分别有39bit包计数和1bit方向。软件提供会话密钥、IV、初值；同一活动内分别推进，最大值用过后不回绕。其他链路使用槽号/天数的nonce规则尚未自动生成，见验收报告。
+- 安全：0明文、1AES-CCM、2SM4-CCM；密钥128bit、nonce13B、MIC4B、关联数据单字节0。TX/RX分别有39bit包计数和1bit方向。软件提供会话密钥、IV、初值；同一活动内分别推进，最大值用过后不回绕。CM ABI 1.1增加单帧TX/RX的槽号/天数Nonce配置，见CM_INTERFACE.md；链式/连续/双向活动使用载荷计数配置。
 - 时长：MIN/MAX、RX窗口、转换间隔和元数据TX空口时长统一以0.5us计，不沿用原BLE字段的旧单位。最大窗口非零，MIN<=MAX；启动新TX前先检查其可靠airtime是否越界。无法仅根据coding_done或tx_done推算实际空口时长。
 
 所有端口位宽及变化以module_mapping.json为准。保留目录、模块名称和对象步长，并不等于保留冲突的BLE编码语义。

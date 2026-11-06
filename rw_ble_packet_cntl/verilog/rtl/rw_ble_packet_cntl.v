@@ -12,6 +12,10 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
  input wire [29:0] job_slot,
  input wire [9:0] job_fine,
  input wire [1023:0] context_data,
+ input wire [127:0] cm_context,
+ input wire [9:0] day_count,
+ input wire day_valid,
+ input wire [15:0] time_generation,
  input wire hop_error,
  input wire [6:0] hop_channel,
  input wire cs_layout_valid,radio_grant,scan_valid,
@@ -22,7 +26,7 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
  output wire [63:0] control_template,
  output wire [1167:0] cs_image,
  output wire phase_is_tx,
- input wire cancel,requeue,start_ack,
+ input wire cancel,requeue,start_ack,coex_revoked,
  output wire idle,
  output reg running,started,done,abandoned,
  output reg [3:0] active_index,
@@ -87,6 +91,8 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
   RX_ARM=45,RAW_REQUEST=46,RAW_WAIT=47,RX_MAILBOX_CLOSE=48;
  reg [5:0] state,after_start,return_state;
  reg [1023:0] cfg;
+ reg nonce_by_time,nonce_valid;
+ reg [9:0] packet_day;
  reg [29:0] target_slot;
  reg [9:0] target_fine;
  reg [13:0] csptr,desc_ptr,next_desc,first_tx,first_rx,tx_cursor,rx_cursor;
@@ -142,13 +148,16 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
  wire stream_sink_ready=(!tx_valid||tx_ready)&&state!=STOP&&state!=FINISH&&state!=IDLE;
  wire [1:0] security=cfg[16+:2]; // 0 plain,1 AES-CCM,2 SM4-CCM,3 invalid
  wire auth_only=cfg[18];
+ wire is_tx,sequence_end,repeat_sequence,valid_mode;
  wire [127:0] key={cfg[15*32+:32],cfg[14*32+:32],cfg[13*32+:32],cfg[12*32+:32]};
  wire [63:0] iv={cfg[17*32+:32],(cfg[16*32+:32]^(tx_frame_type<3?cfg[20*32+:32]:{8'd0,tx_llid}))};
- wire [39:0] counter_direction=is_tx?{cfg[19*32+7],tx_security_counter}:{cfg[11*32+7],rx_security_counter};
+ wire [29:0] nonce_time_slot=is_tx?target_slot:sync_slot;
+ wire [9:0] nonce_time_day=packet_day+((!is_tx&&sync_slot<target_slot)?10'd1:10'd0);
+ wire [39:0] counter_direction=nonce_by_time?{nonce_time_day,nonce_time_slot}:
+                      (is_tx?{cfg[19*32+7],tx_security_counter}:{cfg[11*32+7],rx_security_counter});
  // Counter occupies five little-endian octets, IV follows eight octets.
  wire [103:0] nonce={counter_direction[7:0],counter_direction[15:8],counter_direction[23:16],
   counter_direction[31:24],counter_direction[39:32],iv[7:0],iv[15:8],iv[23:16],iv[31:24],iv[39:32],iv[47:40],iv[55:48],iv[63:56]};
- wire is_tx,sequence_end,repeat_sequence,valid_mode;
  wire [29:0] time_delta=now_slot-target_slot;
  wire target_reached=(!time_delta[29]&&time_delta!=0)||(time_delta==0&&now_fine>=target_fine);
  wire window_expired=running && elapsed>=max_ticks;
@@ -173,7 +182,9 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
   .store_data(store_data),.store_be(store_be),.read_req(buffer_read),.read_addr(buffer_addr),.read_valid(buffer_valid),.read_data(buffer_data),
   .start(crypto_start),.algorithm(security==2),.decrypt(!is_tx),.encrypt_payload(!auth_only),.mic_enable(security!=0),
   .key(key),.nonce(nonce),.length(payload_len),.busy(crypto_busy),.done(crypto_done),.error(crypto_error),.mic_ok(crypto_mic_ok),.mic_value(crypto_mic));
- sle_ccm_stream_tx stream_crypto(.clk(clk),.rst_n(rst_n&&!tx_stop),.start(stream_start),.algorithm(security==2),.auth_only(auth_only),
+ wire stream_rst_n;
+ rw_cm_reset_sync stream_reset(.clk(clk),.async_n(rst_n),.hold(tx_stop),.reset_n(stream_rst_n));
+ sle_ccm_stream_tx stream_crypto(.clk(clk),.rst_n(stream_rst_n),.start(stream_start),.algorithm(security==2),.auth_only(auth_only),
   .key(key),.nonce(nonce),.length(payload_len),.s_data(load_word),.s_valid(state==LOAD_STORE&&is_tx&&security!=0),.s_ready(stream_ready),
   .m_data(stream_data),.m_keep(stream_keep),.m_valid(stream_valid),.m_last(stream_last),.m_ready(stream_sink_ready),
   .busy(stream_busy),.done(stream_done),.error(stream_error));
@@ -201,6 +212,7 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
    state<=IDLE;after_start<=0;return_state<=0;cfg<=0;target_slot<=0;target_fine<=0;csptr<=0;desc_ptr<=0;next_desc<=0;
+   nonce_by_time<=0;nonce_valid<=0;packet_day<=0;
    first_tx<=0;first_rx<=0;meta_ptr<=0;next_meta<=0;first_tx_meta<=0;first_rx_meta<=0;data_ptr<=0;
    tx_cursor<=0;rx_cursor<=0;tx_meta_cursor<=0;rx_meta_cursor<=0;gap_finish<=0;tx_touched<=0;rx_touched<=0;requeue_pending<=0;tx_stop<=0;
    mode<=0;phase<=0;cont<=0;tx_irq_en<=0;rx_irq_en<=0;cancel_latched<=0;running<=0;started<=0;done<=0;abandoned<=0;active_index<=0;
@@ -223,11 +235,18 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
    if(running && tick_fine) begin packet_elapsed<=packet_elapsed+1'b1;gap_elapsed<=gap_elapsed+1'b1;end
    if(rx_sync_valid && running && !is_tx && !sync_seen) begin
     if(rx_sync_fine>249)error_set[1]<=1;
-    else begin sync_seen<=1;sync_slot<=rx_sync_slot;sync_fine<=rx_sync_fine;end
+    else begin sync_seen<=1;sync_slot<=rx_sync_slot;sync_fine<=rx_sync_fine;
+     if(nonce_by_time&&(&packet_day)&&rx_sync_slot<target_slot)nonce_valid<=0;
+    end
    end
    case(state)
     IDLE:if(job_valid) begin
      active_index<=job_index;csptr<=job_csptr;mode<=job_mode;target_slot<=job_slot;target_fine<=job_fine;cfg<=context_data;
+     nonce_by_time<=cm_context[8]===1'b1;
+     packet_day<=day_count+((job_slot<now_slot&&!((job_slot-now_slot)&30'h20000000))?10'd1:10'd0);
+     nonce_valid<=!(cm_context[8]===1'b1) ||
+       (day_valid && cm_context[96+:16]==time_generation &&
+        !((&day_count)&&job_slot<now_slot));
      phase<=0;cancel_latched<=0;running<=0;packet_elapsed<=0;final_status<=`SLE_DONE;final_reason<=0;
      tx_security_counter<={context_data[19*32+:7],context_data[18*32+:32]};
      rx_security_counter<={context_data[11*32+:7],context_data[10*32+:32]};
@@ -246,6 +265,7 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
      if(cfg[26]&&scan_valid) cfg[22*32+:32]<={25'd0,scan_channel};
      desc_ptr<=is_tx?cs_words[18][13:0]:cs_words[17][13:0];meta_ptr<=is_tx?cfg[8*32+:16]:cfg[9*32+:16];
      if(!valid_mode || !cs_layout_valid || cs_words[0][2:0]!=mode || cs_words[24]==0 || cs_words[23]>cs_words[24] ||
+       (security!=0&&(!nonce_valid || (nonce_by_time&&(mode>1||cs_words[0][3])))) ||
        tx_frame_type<1 || tx_frame_type>4 || tx_mcs>12 || tx_mseq_id>5 || security==3 ||
        (!cfg[25]&&!cfg[26]&&cfg[22*32+7+:25]!=0) || (cfg[25]&&hop_error) || (cfg[26]&&!scan_valid) ||
        (cfg[25]&&cfg[26]) || (phy_caps & 32'hf)!=32'hf) finish_error(`SLE_BAD_DESC);
@@ -282,7 +302,7 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
      wire_len<=meta_words[1][10:0]+(security!=0?11'd4:11'd0);
      tx_unaligned<=data_ptr[0];word_index<=0;byte_address<=({1'b0,data_ptr}<<1);chain_steps<=chain_steps+1'b1;
      if(meta_words[0][13:0]!=desc_ptr || meta_words[0][15:14]!=0 || meta_words[1][15:11]!=0 || meta_words[1][31:27]!=0 ||
-       desc_words[0][15] || data_ptr==0 || meta_words[1][26:16]==0 ||
+       (nonce_by_time&&security!=0&&next_desc!=0) || desc_words[0][15] || data_ptr==0 || meta_words[1][26:16]==0 ||
        (security!=0 && (is_tx?tx_counter_exhausted:rx_counter_exhausted)) ||
        (({1'b0,data_ptr}<<1)+meta_words[1][26:16])>EM_BYTES ||
        (is_tx && ({1'b0,meta_words[1][10:0]}+(security!=0?12'd4:0)>meta_words[1][26:16])) ||
@@ -423,6 +443,9 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
      rx_req<=1;rx_write<=1;rx_addr<=8'h3c;rx_wdata<=1;
      if(!sync_seen) status_word[0]<=1;
      if(status_word[2]) begin deliver<=0;word_count<=0;state<=RX_WRITE_READ;end
+     else if(security!=0 && crc_ok && !nonce_valid)begin
+      status_word[4]<=1;mic_pass<=0;deliver<=0;word_index<=0;state<=RX_WRITE_READ;
+     end
      else if(security!=0 && crc_ok) begin crypto_start<=1;state<=RX_CRYPTO;end
      else begin deliver<=crc_ok&&sync_seen&&!rx_header[8]&&rx_header[2:0]==tx_frame_type;word_index<=0;state<=RX_WRITE_READ;end
     end
@@ -512,7 +535,8 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
      end
      if(is_tx) begin tx_cursor<=next_desc;tx_meta_cursor<=next_meta;end
      else begin rx_cursor<=next_desc;rx_meta_cursor<=next_meta;end
-     if(cancel_latched || window_expired) begin final_status<=cancel_latched?`SLE_CANCELLED:`SLE_DONE;final_reason<=cancel_latched?`SLE_SW_CANCEL:`SLE_WINDOW_END;state<=STOP;end
+     if(coex_revoked===1'b1)begin final_status<=`SLE_CANCELLED;final_reason<=`SLE_CONFLICT;state<=STOP;end
+     else if(cancel_latched || window_expired) begin final_status<=cancel_latched?`SLE_CANCELLED:`SLE_DONE;final_reason<=cancel_latched?`SLE_SW_CANCEL:`SLE_WINDOW_END;state<=STOP;end
      else if(!mode[1] && next_desc!=0) begin
       if(next_desc==desc_ptr || next_meta==0 || next_meta==meta_ptr) finish_error(`SLE_BAD_DESC);
       else begin desc_ptr<=next_desc;meta_ptr<=next_meta;desc_index<=0;state<=DESC_REQ;end
@@ -527,7 +551,8 @@ module rw_ble_packet_cntl #(parameter integer EM_BYTES=131072)(
      else begin if(!is_tx)final_reason<=`SLE_NO_BUFFER;state<=STOP;end
     end
     GAP:begin
-     if(cancel_latched || window_expired) begin final_status<=cancel_latched?`SLE_CANCELLED:`SLE_DONE;final_reason<=cancel_latched?`SLE_SW_CANCEL:`SLE_WINDOW_END;state<=STOP;end
+     if(coex_revoked===1'b1)begin final_status<=`SLE_CANCELLED;final_reason<=`SLE_CONFLICT;state<=STOP;end
+     else if(cancel_latched || window_expired) begin final_status<=cancel_latched?`SLE_CANCELLED:`SLE_DONE;final_reason<=cancel_latched?`SLE_SW_CANCEL:`SLE_WINDOW_END;state<=STOP;end
      else if(gap_finish && elapsed>=min_ticks) state<=STOP;
      else if(!gap_finish && gap_elapsed>=cfg[7*32+:16]) begin desc_index<=0;packet_elapsed<=0;state<=DESC_REQ;end
     end

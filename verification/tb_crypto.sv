@@ -22,12 +22,47 @@ module tb_crypto;
  endtask
  task launch(input bit dec);
   @(negedge clk);decrypt=dec;start=1;@(negedge clk);start=0;
+  // Idle host port cannot steal a read or overwrite payload during CCM.
+  read_req=1;read_addr=511;store_we=1;store_addr=0;store_data=32'hbad0bad0;store_be=15;
+  repeat(3)begin @(posedge clk);#1;if(read_valid)$fatal(1,"busy host read accepted");end
+  @(negedge clk);read_req=0;store_we=0;
   wait(done);#1;if(error)$fatal(1,"crypto error alg=%0d n=%0d",algorithm,length);
  endtask
  initial begin
   $readmemh("aes_sm4_ccm.mem",oracle);
   lengths[0]=0;lengths[1]=1;lengths[2]=15;lengths[3]=16;lengths[4]=17;lengths[5]=31;lengths[6]=260;lengths[7]=2043;
   repeat(4)@(negedge clk);rst_n=1;
+  put(0,32'h11223344);
+  @(negedge clk);store_addr=0;store_data=32'haabbccdd;store_be=5;store_we=1;
+  @(negedge clk);store_we=0;
+  get(0,got);if(got!==32'h11bb33dd)$fatal(1,"CCM byte write lost lanes");
+  // Same-edge read/write returns the previous word (read-first).
+  @(negedge clk);read_req=1;read_addr=0;store_we=1;store_addr=0;store_data=32'hdeadbeef;store_be=15;
+  @(posedge clk);#1;if(read_valid)$fatal(1,"CCM response before registered RAM edge");
+  @(negedge clk);read_req=0;store_we=0;
+  @(posedge clk);#1;if(!read_valid||read_data!==32'h11bb33dd)$fatal(1,"CCM read-first contract");
+  get(0,got);if(got!==32'hdeadbeef)$fatal(1,"CCM simultaneous write not committed");
+  put(511,32'hc0debeef);
+  @(negedge clk);rst_n=0;repeat(3)@(negedge clk);
+  if(read_valid || busy || done)$fatal(1,"CCM reset left old response");
+  rst_n=1;get(511,got);if(got!==32'hc0debeef)$fatal(1,"CCM reset cleared BRAM content");
+  // Cancel an accepted read before the physical RAM edge: its old validity
+  // must not reappear after reset. Contents remain available to a new read.
+  @(negedge clk);read_req=1;read_addr=511;
+  @(posedge clk);#1;if(read_valid)$fatal(1,"CCM read completed before RAM edge");
+  @(negedge clk);read_req=0;rst_n=0;repeat(3)@(negedge clk);
+  rst_n=1;
+  repeat(3)begin @(posedge clk);#1;if(read_valid)$fatal(1,"old CCM read crossed reset");end
+  get(511,got);if(got!==32'hc0debeef)$fatal(1,"CCM retained word lost after read abort");
+  // Abort both algorithms during computation; the following independent CCM
+  // vectors must recover without an old completion, key or partial MAC.
+  for(a=0;a<2;a=a+1)begin
+   @(negedge clk);algorithm=a;length=17;start=1;
+   @(negedge clk);start=0;repeat(5)@(negedge clk);
+   if(!busy)$fatal(1,"CCM reset test did not enter computation");
+   rst_n=0;repeat(3)@(negedge clk);rst_n=1;
+   repeat(4)begin @(posedge clk);#1;if(busy||done||read_valid)$fatal(1,"stale CCM operation after reset");end
+  end
   for(a=0;a<2;a=a+1) for(k=0;k<8;k=k+1) begin
    algorithm=a;n=lengths[k];length=n;
    for(i=0;i<(n+7)/4;i=i+1) begin

@@ -2,7 +2,7 @@
 // SLE 9.4 random-identifier resolution: select IRK ID, calculate CMAC and
 // compare the low 16 hash bits. HMAC-SM3 is explicitly not advertised.
 module rw_ble_ral_search_engine(
- input wire clk,rst_n,start,abort,algorithm,
+ input wire clk,rst_n,start,abort,algorithm,freeze,
  input wire [15:0] wanted_irk_id,wanted_hash,
  input wire [127:0] random_message,
  input wire [4:0] random_bytes,
@@ -30,7 +30,7 @@ module rw_ble_ral_search_engine(
    go<=0;
    if(result_valid&&result_ready) result_valid<=0;
    case(state)
-    0:if(start&&!result_valid) begin busy<=1;matched<=0;error<=0;result_tag<=0;irk_id<=wanted_irk_id;hash<=wanted_hash;msg<=random_message;n<=random_bytes;alg<=algorithm;state<=1;end
+    0:if(start&&!result_valid&&!(freeze===1'b1)) begin busy<=1;matched<=0;error<=0;result_tag<=0;irk_id<=wanted_irk_id;hash<=wanted_hash;msg<=random_message;n<=random_bytes;alg<=algorithm;state<=1;end
     1:if(entry_valid) begin
      if(entry_irk_id==irk_id) begin key<=entry_key;tag<=entry_tag;last<=entry_last;state<=2;end
      else if(entry_last) begin busy<=0;result_valid<=1;state<=0;end

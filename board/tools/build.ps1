@@ -14,5 +14,7 @@ try {
  Copy-Item -LiteralPath $init.FullName -Destination "$Stage\results\ps7_init.tcl"
 } finally {Pop-Location}
 & "$PSScriptRoot\reset_sim.ps1" -Stage $Stage
+& 'D:\vivado\Vivado\2020.2\bin\vivado.bat' -mode batch -source "$PSScriptRoot\check_debug_clocks.tcl" -notrace -log "$Stage\debug_clocks.log" -journal "$Stage\debug_clocks.jou" -tclargs $Stage
+if($LASTEXITCODE -ne 0){throw 'Debug clock/AON physical connectivity check failed'}
 & $Python -X utf8 "$PSScriptRoot\prepare.py" $Stage --collect
 if($LASTEXITCODE -ne 0){throw 'Board artifact validation failed'}

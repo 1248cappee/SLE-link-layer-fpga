@@ -5,6 +5,8 @@ module sle_phy_test(
  input wire [10:0] rx_length,input wire [1:0] rx_flags,input wire [15:0] read_latency,
  input wire [23:0] air_cycles,input wire [15:0] sync_delay,mail_delay,
  input wire [7:0] stall_mask,
+ input wire tx_compare_enable,
+ output reg [15:0] first_mismatch,
  input wire buf_req,buf_write,input wire [10:0] buf_addr,input wire [31:0] buf_wdata,
  input wire [3:0] buf_be,output wire buf_wait,output reg [31:0] buf_rdata,
  input wire tx_cfg_valid,output wire tx_cfg_ready,input wire [15:0] tx_payload_bytes,
@@ -20,6 +22,10 @@ module sle_phy_test(
  (* ram_style="block" *) reg [31:0] tx_mem[0:511];
  (* ram_style="block" *) reg [31:0] rx_mem[0:511];
  reg [31:0] rx_word,host_tx_word,host_rx_word;
+ reg [31:0] compare_word,compare_data;
+ reg [3:0] compare_keep;
+ reg [15:0] compare_offset;
+ reg compare_pending;
  reg [1:0] host_state;reg [10:0] host_address;reg host_write;
  reg [7:0] phase;reg configured,air_active,rx_active,sent,mailbox,pending;
  reg [15:0] expected_bytes,age,delay_left;reg [23:0] air_left;
@@ -47,6 +53,10 @@ module sle_phy_test(
     for(b=0;b<4;b=b+1)if(host_mem_be[b])rx_mem[host_mem_address][b*8+:8]<=host_mem_data[b*8+:8];
    host_tx_word<=tx_mem[buf_addr[8:0]];host_rx_word<=rx_mem[buf_addr[8:0]];
    rx_word<=rx_mem[read_index[8:0]];
+   compare_word<=rx_mem[tx_bytes[10:2]];
+   if(!rst_n)compare_pending<=0;
+   else compare_pending<=transfer&&tx_compare_enable;
+   compare_data<=tx_data;compare_keep<=tx_keep;compare_offset<=tx_bytes;
  end
  always @(posedge clk)begin
   if(!rst_n)begin
@@ -54,9 +64,12 @@ module sle_phy_test(
    tx_start_slot<=0;tx_start_fine<=0;air_left<=0;errors<=0;mail_acks<=0;tx_frames<=0;rx_frames<=0;
    rx_rvalid<=0;rx_rdata<=0;rx_irq<=0;rx_active<=0;sent<=0;mailbox<=0;pending<=0;age<=0;delay_left<=0;
    rx_window_started<=0;rx_sync_valid<=0;rx_sync_slot<=0;rx_sync_fine<=0;read_index<=0;read_address<=0;frame_type<=1;
-   host_state<=0;host_address<=0;host_write<=0;buf_rdata<=0;
+   host_state<=0;host_address<=0;host_write<=0;buf_rdata<=0;first_mismatch<=16'hffff;
   end else begin
    phase<=phase+1'b1;tx_air_started<=0;tx_air_done<=0;rx_rvalid<=0;rx_window_started<=0;rx_sync_valid<=0;
+   if(compare_pending)for(b=3;b>=0;b=b-1)if(compare_keep[b]&&compare_data[b*8+:8]!=compare_word[b*8+:8])begin
+    errors[8]<=1;if(first_mismatch==16'hffff)first_mismatch<=compare_offset+b;
+   end
    case(host_state)
     0:if(buf_req)begin host_address<=buf_addr;host_write<=buf_write;host_state<=1;end
     1:begin buf_rdata<=host_address[10]?host_rx_word:host_tx_word;host_state<=2;end

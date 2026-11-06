@@ -25,7 +25,7 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:jtag_axi:1.2 jtag
 set_property -dict [list CONFIG.PROTOCOL {2} CONFIG.M_AXI_ADDR_WIDTH {32} CONFIG.M_AXI_DATA_WIDTH {32}] [get_bd_cells jtag]
 create_bd_cell -type module -reference sle_board_axi test_core
 create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 ila
-set_property -dict [list CONFIG.C_MONITOR_TYPE {Native} CONFIG.C_NUM_OF_PROBES {1} CONFIG.C_PROBE0_WIDTH {256} CONFIG.C_DATA_DEPTH {4096} CONFIG.C_ADV_TRIGGER {true}] [get_bd_cells ila]
+set_property -dict [list CONFIG.C_MONITOR_TYPE {Native} CONFIG.C_NUM_OF_PROBES {1} CONFIG.C_PROBE0_WIDTH {384} CONFIG.C_DATA_DEPTH {4096} CONFIG.C_ADV_TRIGGER {true}] [get_bd_cells ila]
 connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins clk20/clk_in1]
 connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins clk20/resetn] [get_bd_pins reset20/ext_reset_in]
 connect_bd_net [get_bd_pins clk20/locked] [get_bd_pins reset20/dcm_locked]

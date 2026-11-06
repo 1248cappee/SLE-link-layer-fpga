@@ -5,7 +5,7 @@ module tb_board_axi;
  reg [2:0] s_axi_awprot=0,s_axi_arprot=0;reg [3:0] s_axi_wstrb=15;
  reg s_axi_awvalid=0,s_axi_wvalid=0,s_axi_bready=0,s_axi_arvalid=0,s_axi_rready=0;
  wire s_axi_awready,s_axi_wready,s_axi_bvalid,s_axi_arready,s_axi_rvalid;
- wire [1:0] s_axi_bresp,s_axi_rresp;wire [31:0] s_axi_rdata;wire [255:0] trace;
+ wire [1:0] s_axi_bresp,s_axi_rresp;wire [31:0] s_axi_rdata;wire [383:0] trace;
  sle_board_axi dut(.*);
  task aw(input [31:0] a);@(negedge clk);s_axi_awaddr=a;s_axi_awvalid=1;do @(posedge clk);while(!s_axi_awready);@(negedge clk);s_axi_awvalid=0;endtask
  task wd(input [31:0] d,input [3:0] b);@(negedge clk);s_axi_wdata=d;s_axi_wstrb=b;s_axi_wvalid=1;do @(posedge clk);while(!s_axi_wready);@(negedge clk);s_axi_wvalid=0;endtask

@@ -10,16 +10,21 @@ module sle_board_core(
  input wire clk,rst_n,input wire host_req,host_write,input wire [18:0] host_addr,
  input wire [31:0] host_wdata,input wire [3:0] host_be,
  output wire host_wait,output reg [31:0] host_rdata,output wire host_error,
- output wire [255:0] trace
+ output wire [383:0] trace
 );
- reg enabled;reg [31:0] case_id;reg [3:0] ll_reset;
+ reg [31:0] coex_test_config;reg [23:0] coex_delay,coex_age,coex_request_age,wake_delay,wake_age;
+ reg coex_packet;reg tx_compare_enable;wire [15:0] first_mismatch;
+ wire test_wake=(wake_delay!=0)&&(wake_age>=wake_delay);
+ wire test_peer_busy=(coex_test_config[2]&&coex_request_age<coex_delay)||coex_test_config[1]||(coex_test_config[0]&&coex_packet&&coex_age>=coex_delay);
+ reg enabled;wire [63:0] sequence_cycles;reg [31:0] case_id;reg [3:0] ll_reset;
  reg seq_start,seq_abort;wire seq_busy,seq_done,seq_failed;wire [9:0] seq_pc;wire [7:0] seq_reason;
  wire [31:0] seq_actual,seq_expected;wire seq_req,seq_write;wire [17:0] seq_addr;
  wire [31:0] seq_data;wire [3:0] seq_be;
  reg [10:0] rx_length;reg [1:0] rx_flags;reg [15:0] read_latency,sync_delay,mail_delay;
  reg [23:0] air_cycles;reg [7:0] stall_mask;
  wire [15:0] tx_bytes;wire [31:0] model_errors,mail_acks,tx_frames,rx_frames;
- wire ll_rst_n=rst_n&&(ll_reset==0);
+ wire ll_rst_n;
+ rw_cm_reset_sync ll_reset_control(.clk(clk),.async_n(rst_n),.hold(ll_reset!=0),.reset_n(ll_rst_n));
  wire debug_access=host_req&&host_addr[18:16]==4;
  wire code_access=debug_access&&host_addr[15:14]==1;
  wire buffer_access=debug_access&&host_addr[15:13]==4;
@@ -42,9 +47,9 @@ module sle_board_core(
  wire code_load=code_access&&host_write&&!protected_error;
  sle_board_sequence sequence_controller(.clk(clk),.rst_n(rst_n),.start(seq_start),.abort(seq_abort),
  .load(code_load),.load_addr(host_addr[13:2]),.load_data(host_wdata),.load_be(host_be),
- .now_slot(debug_slot),.now_fine(debug_fine),.busy(seq_busy),.done(seq_done),.failed(seq_failed),.pc(seq_pc),.reason(seq_reason),
+ .now_slot(debug_slot),.now_fine(debug_fine),.main_clocks(debug_main_clocks),.busy(seq_busy),.done(seq_done),.failed(seq_failed),.pc(seq_pc),.reason(seq_reason),
  .actual(seq_actual),.expected(seq_expected),.req(seq_req),.wr(seq_write),.addr(seq_addr),.data(seq_data),.be(seq_be),
- .wait_i(ll_wait),.rdata(ll_rdata),.error(ll_error));
+ .wait_i(ll_wait),.rdata(ll_rdata),.error(ll_error),.run_cycles(sequence_cycles));
  always @* begin
   host_rdata=ll_rdata;
   if(debug_access)begin
@@ -75,6 +80,10 @@ module sle_board_core(
     8'h64:host_rdata=mail_acks;
     8'h68:host_rdata=tx_frames;
     8'h6c:host_rdata=rx_frames;
+    8'h70:host_rdata=coex_test_config;8'h74:host_rdata={8'd0,coex_delay};
+    8'h80:host_rdata=debug_main_clocks;8'h84:host_rdata={8'd0,wake_delay};
+    8'h88:host_rdata={31'd0,tx_compare_enable};8'h8c:host_rdata={16'd0,first_mismatch};
+    8'h78:host_rdata=sequence_cycles[31:0];8'h7c:host_rdata=sequence_cycles[63:32];
     default:host_rdata=0;
    endcase
   end
@@ -86,12 +95,21 @@ module sle_board_core(
  reg [31:0] merged;
  always @(posedge clk)begin
   if(!rst_n)begin
-   enabled<=0;case_id<=0;ll_reset<=8;seq_start<=0;seq_abort<=0;
+   enabled<=0;case_id<=0;coex_test_config<=0;coex_delay<=100;coex_age<=0;coex_request_age<=0;coex_packet<=0;wake_delay<=0;wake_age<=0;tx_compare_enable<=0;ll_reset<=8;seq_start<=0;seq_abort<=0;
    rx_length<=17;rx_flags<=1;read_latency<=3;sync_delay<=20;mail_delay<=100;air_cycles<=400;stall_mask<=7;
   end else begin
    seq_start<=0;if(!seq_busy)seq_abort<=0;
+   if(!coex_request)coex_request_age<=0;else if(coex_request_age!=24'hffffff)coex_request_age<=coex_request_age+1'b1;
+   if(tx_air_started)begin coex_packet<=1;coex_age<=0;end
+   else if(tx_air_done||tx_stop)begin coex_packet<=0;coex_age<=0;end
+   else if(coex_packet&&coex_age!=24'hffffff)coex_age<=coex_age+1'b1;
+   if(debug_sleep_state!=3)wake_age<=0;else if(wake_age!=24'hffffff)wake_age<=wake_age+1'b1;
    if(ll_reset!=0)ll_reset<=ll_reset-1'b1;
    if(ctrl_access&&host_write&&!host_error)case(host_addr[7:0])
+    8'h70:if(!debug_busy&&!seq_busy)coex_test_config<=merge(coex_test_config,host_wdata,host_be);
+    8'h74:if(!debug_busy&&!seq_busy)coex_delay<=host_wdata[23:0];
+    8'h84:if(!debug_busy&&!seq_busy)wake_delay<=host_wdata[23:0];
+    8'h88:if(!debug_busy&&!seq_busy&&host_be[0])tx_compare_enable<=host_wdata[0];
     8'h0c:case_id<=merge(case_id,host_wdata,host_be);
     8'h10:if(host_be[0])enabled<=host_wdata[0];
     8'h14:if(host_be[0])begin
@@ -110,7 +128,7 @@ module sle_board_core(
    endcase
   end
  end
- assign trace={case_id,debug_slot,debug_fine,debug_event,debug_errors,debug_fifo_count,
+ assign trace={27'd0,debug_main_clocks,debug_sleep_count,debug_wake_count,debug_sleep_state,ll_clock_enable,21'd0,case_id,debug_slot,debug_fine,debug_event,debug_errors,debug_fifo_count,
   model_errors,seq_pc,seq_reason,seq_busy,seq_done,seq_failed,debug_busy,irq,
   tx_cfg_valid,tx_cfg_ready,tx_valid,tx_ready,tx_last,tx_launch,tx_prepared,tx_air_started,tx_air_done,tx_stop,
   rx_req,rx_write,rx_rvalid,rx_irq,rx_sync_valid,rx_stop,rx_drain_done,tx_quiescent,tx_error,host_req,ll_req,ll_wait,ll_error};
@@ -119,7 +137,7 @@ wires=''
 for direction,width,name in ports:
     wires+=f' wire {width} {name};\n'
 body=body.replace(' reg enabled;',wires+' reg enabled;')
-mapping={'clk':'clk','rst_n':'ll_rst_n','p_rd':'ll_req&&!ll_write','p_wr':'ll_req&&ll_write','p_ad':'ll_addr','p_wdata':'ll_data','p_ben':'ll_be','p_wait':'ll_wait','p_rdata':'ll_rdata','p_error':'ll_error','hready_in':"1'b1"}
+mapping={'clk':'ll_clk','aon_clk':'clk','rst_n':'ll_rst_n','p_rd':'ll_req&&!ll_write','p_wr':'ll_req&&ll_write','p_ad':'ll_addr','p_wdata':'ll_data','p_ben':'ll_be','p_wait':'ll_wait','p_rdata':'ll_rdata','p_error':'ll_error','hready_in':"1'b1"}
 # Remove redeclarations of the two wrapper inputs.
 body=body.replace(' wire  clk;\n','').replace(' wire  rst_n;\n','')
 phy_start=False
@@ -128,8 +146,9 @@ for direction,width,name in ports:
     if name=='wlan_busy':phy_start=False
     if name not in mapping:
         mapping[name]=name if direction=='output' or phy_start else "'d0"
+mapping.update(wlan_busy='test_peer_busy',wlan_priority='coex_test_config[12:8]',external_wake='test_wake')
 mapping['phy_caps']="enabled?32'h8000000f:32'd0"
-body+=' rw_ble_top link_layer(\n'+',\n'.join(f' .{n}({mapping[n]})' for _,_,n in ports)+'\n );\n'
+body+=' wire ll_clk;\n sle_board_clock_gate gate(.clk(clk),.enable(ll_clock_enable),.rst_n(rst_n),.gated_clk(ll_clk));\n rw_ble_top #(.AON_ENABLE(1)) link_layer(\n'+',\n'.join(f' .{n}({mapping[n]})' for _,_,n in ports)+'\n );\n'
 phy_header=(ROOT/'board/rtl/sle_phy_test.v').read_text().split(');',1)[0]
 names=[]
 for match in re.finditer(r'\b(input|output)\s+(?:wire|reg)\s*(?:\[[^]]+\])?\s*(.*?)(?=\b(?:input|output)\s+(?:wire|reg)|$)',phy_header,re.S):

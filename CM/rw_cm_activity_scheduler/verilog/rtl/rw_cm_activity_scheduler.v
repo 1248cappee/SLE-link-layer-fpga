@@ -5,6 +5,7 @@ module rw_cm_activity_scheduler #(parameter integer EM_BYTES=131072)(
  input wire [13:0] etptr,
  input wire [29:0] now_slot,
  input wire [9:0] now_fine,
+ input wire [2047:0] cm_banks,
  input wire commit,
  input wire [3:0] commit_index,
  input wire [29:0] commit_slot,
@@ -70,6 +71,11 @@ module rw_cm_activity_scheduler #(parameter integer EM_BYTES=131072)(
  reg [29:0] delta,delta2;
  reg [38:0] lead;
  integer i;
+ wire [127:0] scan_config=cm_banks[{scan,7'b0}+:128];
+ wire grid_legal;
+ sle_schedule_grid grid(.selection(scan_config[2:0]),.enabled(scan_config[3]===1'b1),
+  .target_slot({fetched1[13:0],fetched0[31:16]}),.target_fine(fetched1[25:16]),
+  .origin_slot(scan_config[32+:30]),.origin_fine(scan_config[64+:10]),.legal(grid_legal));
  function before_time;
   input [29:0] a,b;
   input [9:0] af,bf;
@@ -180,7 +186,7 @@ module rw_cm_activity_scheduler #(parameter integer EM_BYTES=131072)(
         (({3'd0,fetched2[13:0]}<<1)+146)>EM_BYTES || (({3'd0,fetched2[13:0]}<<1)+146)>32768 ||
         fetched1[31:26]!=0 || fetched1[15:14]!=0 || fetched2[15:14]!=0) begin
       write_status<=`SLE_ERROR;write_type<=`SLE_EV_ERROR;write_reason<=`SLE_BAD_DESC;error_set[0]<=1;
-     end else if(fetched1[25:16]>249) begin
+     end else if(fetched1[25:16]>249 || !grid_legal) begin
       write_status<=`SLE_ERROR;write_type<=`SLE_EV_ERROR;write_reason<=`SLE_BAD_DESC;error_set[1]<=1;
      end else if(cancelled[scan]) begin write_status<=`SLE_CANCELLED;write_type<=`SLE_EV_CANCEL;write_reason<=`SLE_SW_CANCEL;end
      else if(delta[29] || lead<500 || lead[38]) begin

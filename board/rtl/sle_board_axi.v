@@ -7,7 +7,7 @@ module sle_board_axi(
  output wire [1:0] s_axi_bresp,output wire s_axi_bvalid,input wire s_axi_bready,
  input wire [31:0] s_axi_araddr,input wire [2:0] s_axi_arprot,input wire s_axi_arvalid,output wire s_axi_arready,
  output wire [31:0] s_axi_rdata,output wire [1:0] s_axi_rresp,output wire s_axi_rvalid,input wire s_axi_rready,
- output wire [255:0] trace
+ output wire [383:0] trace
 );
  wire req,wr,wait_i,error;wire [18:0] addr;wire [31:0] data,rdata;wire [3:0] be;
  sle_axi_xbar bridge(.clk(clk),.rst_n(rst_n),

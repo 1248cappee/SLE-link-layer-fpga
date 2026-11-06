@@ -3,7 +3,7 @@ module tb_board;
  reg clk=0;always #25 clk=~clk;
  reg rst_n=0,host_req=0,host_write=0;reg [18:0] host_addr=0;
  reg [31:0] host_wdata=0;reg [3:0] host_be=15;
- wire host_wait,host_error;wire [31:0] host_rdata;wire [255:0] trace;
+ wire host_wait,host_error;wire [31:0] host_rdata;wire [383:0] trace;
  sle_board_core dut(.*);
  integer i,j,expected_length,rx_test_length,tx_received,air_ticks=40,target_fine_expect,mode_test;
  reg [31:0] d,head,x;reg [29:0] target;

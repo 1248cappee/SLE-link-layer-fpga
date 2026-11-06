@@ -22,5 +22,9 @@
   "RW-BLE-CORE-FS.pdf": {
     "sha256": "7d291b289b3833d19ca6d6885a5457a84ec4b8a9e0cf496f28746f4224c3d59b",
     "bytes": 36187234
+  },
+  "CM.zip": {
+    "sha256": "61ab1a661a47915c2e2d76c7a99ea5bfd2b8e9a427db87b3ad47834dd5791f9d",
+    "bytes": 446255
   }
 }

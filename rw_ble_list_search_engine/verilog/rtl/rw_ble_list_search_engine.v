@@ -2,7 +2,7 @@
 // Streaming whitelist / masked-address engine. First matching entry wins;
 // each entry is consumed exactly once, including under result backpressure.
 module rw_ble_list_search_engine(
- input wire clk,rst_n,start,abort,
+ input wire clk,rst_n,start,abort,freeze,
  input wire [47:0] wanted,mask,
  input wire invert,
  input wire entry_valid,entry_last,
@@ -22,7 +22,7 @@ module rw_ble_list_search_engine(
   if(!rst_n) begin busy<=0;result_valid<=0;matched<=0;result_tag<=0;target<=0;saved_mask<=0;negated<=0;found<=0;first_tag<=0;end
   else begin
    if(result_valid&&result_ready) result_valid<=0;
-   if(start&&!busy&&!result_valid) begin busy<=1;target<=wanted;saved_mask<=mask;negated<=invert;found<=0;first_tag<=0;end
+   if(start&&!busy&&!result_valid&&!(freeze===1'b1)) begin busy<=1;target<=wanted;saved_mask<=mask;negated<=invert;found<=0;first_tag<=0;end
    if(entry_valid&&entry_ready) begin
     if(hit&&!found) begin found<=1;first_tag<=entry_tag;end
     if(entry_last) begin

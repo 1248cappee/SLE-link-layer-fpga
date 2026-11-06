@@ -7,7 +7,7 @@ MASK=0xffffffff
 def pattern(n):return bytes((i*37+11)&255 for i in range(n))
 def words(b):return [int.from_bytes(b[i:i+4].ljust(4,b'\0'),'little') for i in range(0,len(b),4)]
 class Case:
-    def __init__(self,name):self.name=name;self.setup=[(0x40014,4,15)];self.code=[];self.check=[]
+    def __init__(self,name):self.name=name;self.setup=[(0x40014,4,15),(0x40070,0,15),(0x40084,0,15),(0x40088,0,15)];self.code=[];self.check=[]
     def wr(self,a,v,be=15):self.setup.append((a,v&MASK,be))
     def mw(self,a,v):self.wr(0x20000+a,v)
     def op(self,op,a=0,v=0,m=MASK,be=15,err=False):self.code.append((op|(be<<8)|(int(err)<<16),a,v&MASK,m&MASK))
@@ -144,6 +144,10 @@ def scenarios():
         c=Case(name);fixture(c,md,n)
         for a,v in mutations:c.w(a,v)
         c.publish(md);c.event(5);c.finish();cases.append(c)
+    from cm_cases import extend
+    cases += extend(Case,fixture,complete,words,pattern)
+    from cm_cases import pressure
+    c=pressure(Case,fixture,complete,words,pattern,seconds=0.02);c.name="cm_pressure_short";cases.append(c)
     return cases
 def main():
     OUT.mkdir(parents=True,exist_ok=True)
@@ -153,7 +157,7 @@ def main():
         setup=[(0x4000c,ix,15),*c.setup]
         code=[w for insn in c.code for w in insn]
         tcl.append('lappend sle_cases [list '+c.name+' {'+' '.join(f'{{{a} {v} {b}}}' for a,v,b in setup)+'} {'+' '.join(str(v) for v in code)+'} {'+' '.join(f'{{{a} {v} {m}}}' for a,v,m in c.check)+'}]')
-        stream += [(1,0x40014,4,15),(3,100,0,0)]
+        if not getattr(c,"no_reset",False):stream += [(1,0x40014,4,15),(3,100,0,0)]
         stream += [(1,a,v,b) for a,v,b in setup if a!=0x40014]
         stream += [(1,0x44000+i*4,v,15) for i,v in enumerate(code)]
         stream += [(1,0x40014,1,15),(4,ix,0,0)]

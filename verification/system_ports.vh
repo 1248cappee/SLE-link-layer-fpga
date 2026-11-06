@@ -1,5 +1,9 @@
 reg clk=0;always #25 clk=~clk;
 reg  rst_n=0;
+reg  aon_clk=0;
+reg  external_wake=0;
+wire  ll_clock_enable;
+wire [3:0] debug_sleep_state;
 reg  hsel=0;
 reg  hready_in=0;
 reg [17:0] haddr=0;
@@ -111,3 +115,6 @@ wire  debug_busy;
 wire [4:0] debug_errors;
 wire [7:0] debug_fifo_count;
 wire [71:0] debug_event;
+wire [31:0] debug_sleep_count;
+wire [31:0] debug_wake_count;
+wire [31:0] debug_main_clocks;
